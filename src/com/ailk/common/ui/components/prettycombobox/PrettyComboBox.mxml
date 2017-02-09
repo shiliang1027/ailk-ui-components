@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:mx="library://ns.adobe.com/flex/mx"
+         minWidth="150"
+         toolTip="{sNum.text=='0' ? showNameInput.text : '已选择 ' + sNum.text + ' 项 :' + showNameInput.text}"
+         height="22"
+         creationComplete="group1_creationCompleteHandler(event)">
+    <fx:Script>
+        <![CDATA[
+            import flash.utils.setTimeout;
+
+            import mx.collections.ArrayCollection;
+            import mx.events.FlexEvent;
+            import mx.managers.PopUpManager;
+
+            import spark.components.CheckBox;
+            import spark.events.IndexChangeEvent;
+
+            private var _dataProvider:ArrayCollection;
+
+            private var dropdownShown:Boolean = false;
+
+            //下拉框的高度
+            private var _dpHeight:int;
+
+            //默认提示信息
+            private var _promptDefault:String;
+
+            private var _selectedItem:Object = null;
+            private var _selectedItems:ArrayCollection = new ArrayCollection();
+            private var oldSelectedItems:ArrayCollection = new ArrayCollection();
+
+            private var _multiSlecteEnabled:Boolean = false;
+
+            private var text:String = "";
+
+            private var _editable:Boolean = true;
+
+            private var _labelField:String = "label";
+
+            private var _showNums:Boolean = true;
+
+            private var _showToolButtons:Boolean = true;
+
+            public var change:Function;
+
+
+            [Bindable]
+            public var dropShadowVisible:Boolean = true;
+
+
+            protected function group1_creationCompleteHandler(event:FlexEvent):void
+            {
+                if (_multiSlecteEnabled)
+                    this.list.itemRenderer = new ClassFactory(MultiSelectItemRenderer);
+            }
+
+            [Bindable]
+            public function get dataProvider():ArrayCollection
+            {
+                return _dataProvider;
+            }
+
+            public function set dataProvider(value:ArrayCollection):void
+            {
+                _dataProvider = value;
+            }
+
+            protected function button1_clickHandler(event:MouseEvent):void
+            {
+                if (dropdownShown)
+                    closeDropdown();
+                else
+                    openDropdown();
+            }
+
+            protected function li_changeHandler(event:IndexChangeEvent):void
+            {
+                this._selectedItem = list.selectedItem;
+
+                if (!multiSlecteEnabled)
+                {
+                    this.showNameInput.text = list.selectedItem['label'];
+
+                    this.closeDropdown();
+
+                    textInput.alpha = 0;
+                }
+            }
+
+
+            protected function list_clickHandler(event:MouseEvent):void
+            {
+                var cb:CheckBox;
+
+                if (event.target is CheckBox)
+                    cb = event.target as CheckBox;
+                else if (event.target.hasOwnProperty('cb') && event.target.cb is CheckBox)
+                {
+                    cb = event.target.cb as CheckBox;
+                    cb.selected = !cb.selected;
+                }
+                else
+                    return;
+
+                list.selectedItem.selected = cb.selected;
+
+                if (cb.selected)
+                {
+                    this.selectedItems.addItem(list.selectedItem);
+                }
+                else
+                {
+                    this.selectedItems.removeItemAt(selectedItems.getItemIndex(list.selectedItem));
+                }
+
+                this.resetPrompt();
+            }
+
+
+            private function flt(o:Object):Boolean
+            {
+                return o['label'].toString().toLocaleLowerCase().indexOf(text.toLocaleLowerCase()) != -1;
+            }
+
+            private function kUpHandler(event:KeyboardEvent):void
+            {
+                text = textInput.text + "";
+
+                dataProvider.filterFunction = flt;
+                dataProvider.refresh();
+
+                this.openDropdown();
+            }
+
+            private function openDropdown():void
+            {
+                showNameInput.alpha = 0;
+                sNum.alpha = 0;
+                textInput.alpha = 1;
+
+                if (dropdownShown)
+                    return;
+
+                canvas.width = textInput.width + dropdownButton.width;
+                var gp:Point = textInput.contentToGlobal(new Point(textInput.x, textInput.y));
+                canvas.x = gp.x;
+                canvas.y = gp.y + textInput.height;
+                dropShadowVisible = true;
+
+                if (canvas.y + canvas.height > this.parentApplication.height && canvas.y - textInput.height - canvas.height > 0)
+                {
+                    canvas.y = canvas.y - textInput.height - canvas.height;
+                    dropShadowVisible = false;
+                }
+
+                PopUpManager.addPopUp(canvas, this.parentApplication as DisplayObject);
+                dropdownShown = true;
+
+                systemManager.getSandboxRoot().addEventListener(MouseEvent.MOUSE_DOWN, focusOut);
+                systemManager.getSandboxRoot().addEventListener(MouseEvent.MOUSE_WHEEL, focusOut);
+
+                if (multiSlecteEnabled)
+                {
+                    oldSelectedItems.removeAll();
+                    oldSelectedItems.addAll(_selectedItems);
+                }
+            }
+
+            private function closeDropdown():void
+            {
+                textInput.alpha = 0;
+                showNameInput.alpha = 1;
+                sNum.alpha = 1;
+
+                if (!dropdownShown)
+                    return;
+
+                dropdownShown = false;
+                PopUpManager.removePopUp(canvas);
+
+                systemManager.getSandboxRoot().removeEventListener(MouseEvent.MOUSE_DOWN, focusOut);
+                systemManager.getSandboxRoot().removeEventListener(MouseEvent.MOUSE_WHEEL, focusOut);
+
+                if (multiSlecteEnabled && change != null)
+                {
+                    if (oldSelectedItems.length != _selectedItems.length)
+                        change.call();
+                    else
+                    {
+                        var equal:Boolean = true;
+
+                        for each (var item:Object in _selectedItems)
+                        {
+                            if (!oldSelectedItems.contains(item))
+                            {
+                                equal = false;
+                                break;
+                            }
+                        }
+
+                        if (!equal)
+                            change.call();
+                    }
+                }
+            }
+
+            protected function focusOut(event:MouseEvent):void
+            {
+                //如果点击的是本身的textinput  下拉按钮   列表项  滚动条 则不关闭下拉窗口
+                if (event.target == dropdownButton || event.target == canvas)
+                    return;
+
+                if (event.target.hasOwnProperty('owner'))
+                {
+                    if (event.target.owner.hasOwnProperty('owner'))
+                    {
+                        if (event.target.owner.owner == list || event.target.owner.owner == textInput || event.target.owner.owner == canvas)
+                            return;
+
+                        if (event.target.owner.owner.hasOwnProperty('owner'))
+                        {
+                            if (event.target.owner.owner.owner == canvas)
+                                return;
+
+                            if (event.target.owner.owner.owner.hasOwnProperty('owner'))
+                            {
+                                if (event.target.owner.owner.owner.owner == canvas)
+                                    return;
+
+                                if (event.target.owner.owner.owner.owner.hasOwnProperty('owner'))
+                                {
+                                    if (event.target.owner.owner.owner.owner.owner == canvas)
+                                        return;
+
+                                    if (event.target.owner.owner.owner.owner.owner.hasOwnProperty('owner'))
+                                        if (event.target.owner.owner.owner.owner.owner.owner == list)
+                                            return;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                this.closeDropdown();
+            }
+
+
+            public function resetPrompt():void
+            {
+                var m:String = "";
+
+                for each (var o:Object in selectedItems)
+                    m += o[labelField] + " ";
+
+                showNameInput.text = m;
+
+                if (showNameInput.text == "")
+                    showNameInput.text = this._promptDefault;
+            }
+
+            public function clear(flag:Boolean = true):void
+            {
+                this.selectedItem = null;
+                this.selectedItems.removeAll();
+
+                for each (var item:Object in dataProvider)
+                    item.selected = !flag;
+
+                dataProvider.refresh();
+
+                if (!flag)
+                {
+                    selectedItems.addAll(dataProvider);
+                }
+
+                resetPrompt();
+            }
+
+
+
+            //--------------------getter setter----------------------------------
+            public function get selectedItem():Object
+            {
+                return _selectedItem;
+            }
+
+            public function set selectedItem(value:Object):void
+            {
+                _selectedItem = value;
+            }
+
+            [Bindbale]
+            public function get selectedItems():ArrayCollection
+            {
+                return _selectedItems;
+            }
+
+            public function set selectedItems(value:ArrayCollection):void
+            {
+                _selectedItems = value;
+            }
+
+            public function get multiSlecteEnabled():Boolean
+            {
+                return _multiSlecteEnabled;
+            }
+
+            [Bindable]
+            public function set multiSlecteEnabled(value:Boolean):void
+            {
+                _multiSlecteEnabled = value;
+            }
+
+            public function get editable():Boolean
+            {
+                return _editable;
+            }
+
+            [Bindable]
+            public function set editable(value:Boolean):void
+            {
+                _editable = value;
+            }
+
+            public function get dpHeight():int
+            {
+                return _dpHeight;
+            }
+
+            public function set dpHeight(value:int):void
+            {
+                _dpHeight = value;
+            }
+
+            public function get promptDefault():String
+            {
+                return _promptDefault;
+            }
+
+            public function set promptDefault(value:String):void
+            {
+                _promptDefault = value;
+            }
+
+            public function get showNums():Boolean
+            {
+                return _showNums;
+            }
+
+            [Bindable]
+            public function set showNums(value:Boolean):void
+            {
+                _showNums = value;
+            }
+
+            public function get showToolButtons():Boolean
+            {
+                return _showToolButtons;
+            }
+
+            private function get showTBs():Boolean
+            {
+                return _showToolButtons && multiSlecteEnabled;
+            }
+
+            [Bindable]
+            public function set showToolButtons(value:Boolean):void
+            {
+                _showToolButtons = value;
+            }
+
+            [Bindable]
+            public function get labelField():String
+            {
+                return _labelField;
+            }
+
+            public function set labelField(value:String):void
+            {
+                _labelField = value;
+            }
+        ]]>
+    </fx:Script>
+    <fx:Declarations>
+        <!-- 将非可视元素（例如服务、值对象）放在此处 -->
+    </fx:Declarations>
+    <s:HGroup width="100%"
+              gap="0"
+              height="100%">
+        <s:Group width="100%"
+                 height="100%">
+            <s:TextInput id="showNameInput"
+                         textAlign="left"
+                         contentBackgroundAlpha="1"
+                         fontWeight="bold"
+                         width="100%"
+                         height="100%"/>
+            <s:TextInput id="sNum"
+                         color="0x0080FF"
+                         fontWeight="bold"
+                         contentBackgroundAlpha="1"
+                         visible="{showNums}"
+                         includeInLayout="{showNums}"
+                         width="22"
+                         text="{selectedItems.length}"
+                         textAlign="center"
+                         right="0"
+                         height="100%"/>
+            <s:TextInput id="textInput"
+                         editable="{editable}"
+                         alpha="0"
+                         contentBackgroundAlpha="1"
+                         width="100%"
+                         height="100%"
+                         fontWeight="bold"
+                         keyUp="kUpHandler(event)"
+                         click="openDropdown()"/>
+        </s:Group>
+        <s:Button id="dropdownButton"
+                  skinClass="spark.skins.spark.DropDownListButtonSkin"
+                  width="20"
+                  height="100%"
+                  click="button1_clickHandler(event)"/>
+    </s:HGroup>
+    <mx:Box visible="false"
+            minHeight="23"
+            includeInLayout="false">
+        <mx:Canvas id="canvas"
+                   minHeight="23"
+                   horizontalScrollPolicy="off"
+                   dropShadowVisible="{dropShadowVisible}">
+            <s:VGroup horizontalAlign="center"
+                      width="100%"
+                      gap="0"
+                      verticalAlign="middle">
+                <s:BorderContainer width="100%"
+                                   visible="{showTBs}"
+                                   includeInLayout="{showTBs}"
+                                   minHeight="5"
+                                   backgroundAlpha="1"
+                                   contentBackgroundAlpha="1">
+                    <s:HGroup horizontalAlign="center"
+                              width="100%"
+                              paddingTop="2"
+                              paddingBottom="2"
+                              verticalAlign="middle">
+                        <s:Button label="全选"
+                                  click="clear(false)"/>
+                        <s:Button label="重置"
+                                  click="clear()"/>
+                    </s:HGroup>
+                </s:BorderContainer>
+                <s:List id="list"
+                        contentBackgroundAlpha="0.9"
+                        color="0"
+                        minHeight="23"
+                        maxHeight="200"
+                        labelField="{labelField}"
+                        click="list_clickHandler(event)"
+                        dataProvider="{dataProvider}"
+                        change="li_changeHandler(event)"
+                        width="100%"/>
+            </s:VGroup>
+        </mx:Canvas>
+    </mx:Box>
+</s:Group>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="dynamicDropDown_creationCompleteHandler(event)">
+	<s:layout>
+		<s:VerticalLayout gap="0"/>
+	</s:layout>
+	
+	<s:states>
+		<s:State name="default"/>
+		<s:State name="data"/>
+	</s:states>
+	
+	
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ properties of parent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Metadata ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	<fx:Metadata>
+		[IconFile("assets/combobox.png")]
+		[Event(name="keyWordQuery", type="com.ailk.common.ui.components.dynamicdropdown.event.DynamicDropDownEvent")]
+		[Event(name="query", type="com.ailk.common.ui.components.dynamicdropdown.event.DynamicDropDownEvent")]
+		[Event(name="dataSelected", type="com.ailk.common.ui.components.dynamicdropdown.event.DynamicDropDownEvent")]
+	</fx:Metadata>
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Style ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Script ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	<fx:Script>
+		<![CDATA[
+			import com.ailk.common.ui.components.dynamicdropdown.event.DynamicDropDownEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.utils.StringUtil;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			public var buttonLable:String="查询";
+			[Bindable]
+			public var labelField:String="label";
+			[Bindable]
+			public var listData:ArrayCollection = new ArrayCollection();
+			public var selectedItem:*;
+			public var keyWord:String;
+			
+			[Bindable]
+			private var _width:Number;
+			[Bindable]
+			private var _height:Number;
+			[Bindable]
+			private var _dropDownHeight:Number;
+			protected function dynamicDropDown_creationCompleteHandler(event:FlexEvent):void
+			{
+				this.addEventListener(DynamicDropDownEvent.DATALISTCHANGE,onDataChange);
+				this.addEventListener(DynamicDropDownEvent.INIT,onInit);
+			}
+			
+			private function onInit(event:DynamicDropDownEvent):void{
+				keyWord = "";
+				kw.text = "";
+				this.currentState="";
+			}
+			
+			protected function kw_keyUpHandler(event:KeyboardEvent):void
+			{
+				selectedItem = null;
+				if(StringUtil.trim(kw.text).length>0){
+					var evt:DynamicDropDownEvent = new DynamicDropDownEvent(DynamicDropDownEvent.KEYWORDQUERY);
+					keyWord = StringUtil.trim(kw.text);
+					this.dispatchEvent(evt);
+				}else{
+					this.currentState="";
+				}
+			}
+			
+			protected function list_changeHandler(event:IndexChangeEvent):void
+			{
+				selectedItem = list.selectedItem;
+				kw.text = selectedItem[labelField];
+				keyWord = StringUtil.trim(kw.text);
+				this.currentState = "";
+				var evt:DynamicDropDownEvent = new DynamicDropDownEvent(DynamicDropDownEvent.DATASELECTED);
+				this.dispatchEvent(evt);
+				list.selectedIndex=-1;
+			}
+			
+
+			private function onDataChange(event:DynamicDropDownEvent):void{
+				if(listData!= null && listData.length>0){
+					this.currentState = "data";
+					if(listData.length<10){
+						list.height = 22.5*listData.length;
+					}else{
+						list.height = 22.5*10;
+					}
+				}
+			}
+
+
+			protected function query_clickHandler(event:MouseEvent):void
+			{
+				var evt:DynamicDropDownEvent = new DynamicDropDownEvent(DynamicDropDownEvent.QUERY);
+				this.dispatchEvent(evt);
+			}
+			
+			override public function set width(value:Number):void
+			{
+				_width = value;
+			}
+
+			override public function set height(value:Number):void
+			{
+				_height = value;
+			}
+			
+			public function set dropDownHeight(value:Number):void{
+				_dropDownHeight = value;
+			}
+		]]>
+	</fx:Script>
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Declarations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ UI Components ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	<s:HGroup verticalAlign="middle">
+		<s:TextInput width="{_width}" height="{_height}" id="kw" keyUp="kw_keyUpHandler(event)"/>
+		<s:Button label="{buttonLable}" buttonMode="true" click="query_clickHandler(event)"/>
+	</s:HGroup>
+	<s:List id="list" width="{_width}" height="{_dropDownHeight}" labelField="{labelField}" dataProvider="{listData}" includeIn="data" change="list_changeHandler(event)"></s:List>
+</s:Group>

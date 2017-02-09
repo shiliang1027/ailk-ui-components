@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ailk.common.ui.components.pagination.Pagination")]
+	</fx:Metadata>
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="disabled" />
+		<s:State name="normal" />
+	</s:states>
+	<s:HGroup verticalAlign="middle">
+		<s:Label id="totalNumInfo" text="总记录0条"/>
+		<s:Label id="pageSizeInfo" text="每页0条"/>
+		<s:Label id="currentPageInfo" text="第1页"/>
+		<s:Label id="totalPageInfo" text="共0页"/>
+		<s:TextInput id="pageChangeInput" width="30"/>
+		<s:Button id="pageChangeBtn" toolTip="跳转" label="跳转" buttonMode="true"/>
+		<s:Button id="firstPage" toolTip="首页" label="首页" buttonMode="true"/>
+		<s:Button id="prePage" toolTip="上一页" label="上一页" buttonMode="true"/>
+		<s:Button id="nextPage" toolTip="下一页" label="下一页" buttonMode="true"/>
+		<s:Button id="lastPage" toolTip="末页" label="末页" buttonMode="true"/>
+	</s:HGroup>
+	
+	<!-- SkinParts
+	name=firstPage, type=spark.components.Button, required=false
+	name=lastPage, type=spark.components.Button, required=false
+	name=nextPage, type=spark.components.Button, required=false
+	name=prePage, type=spark.components.Button, required=false
+	name=contentGroup, type=spark.components.Group, required=false
+	-->
+</s:Skin>

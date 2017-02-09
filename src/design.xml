@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ailk-ui-components URI http://www.asiainfo-linkage.com.cn/flex/components -->
+<design version="2">
+    <namespaces>
+        <namespace prefix="ailk_compts"
+                   uri="http://www.asiainfo-linkage.com.cn/flex/components"/>
+    </namespaces>
+
+    <categories>
+        <category id="components"
+                  label="ailk components"
+                  defaultExpand="true"/>
+    </categories>
+
+    <components>
+        <component id="com.ailk.common.ui.components.tree.autosizetree.AutoSizeTree"
+                   name="com.ailk.common.ui.components.tree.autosizetree.AutoSizeTree"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.grid.advanceddatagrid.AdvancedDataGrid"
+                   name="com.ailk.common.ui.components.grid.advanceddatagrid.AdvancedDataGrid"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.date.uxdate.UXDateField"
+                   name="com.ailk.common.ui.components.date.uxdate.UXDateField"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.date.uxdate.UXDateTimeChooser"
+                   name="com.ailk.common.ui.components.date.uxdate.UXDateTimeChooser"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.window.normalwindow.NormalWindowExt"
+                   name="com.ailk.common.ui.components.window.normalwindow.NormalWindowExt"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.window.standardwindow.Window"
+                   name="com.ailk.common.ui.components.window.standardwindow.Window"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.navbar.NavBar"
+                   name="com.ailk.common.ui.components.navbar.NavBar"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.pagination.Pagination"
+                   name="com.ailk.common.ui.components.pagination.Pagination"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.dynamicdropdown.DynamicDropDown"
+                   name="com.ailk.common.ui.components.dynamicdropdown.DynamicDropDown"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.dynamicdropdown.MultiEditDropDownList"
+                   name="com.ailk.common.ui.components.dynamicdropdown.MultiEditDropDownList"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.grid.advancedexdatagrid.AdvancedExDataGrid"
+                   name="com.ailk.common.ui.components.grid.advancedexdatagrid.AdvancedExDataGrid"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.grid.advancedexdatagrid.AdvancedExDataGridColumn"
+                   name="com.ailk.common.ui.components.grid.advancedexdatagrid.AdvancedExDataGridColumn"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.grid.datagridex.DataGridEx"
+                   name="com.ailk.common.ui.components.grid.datagridex.DataGridEx"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.grid.datagridex.DataGridColumnEx"
+                   name="com.ailk.common.ui.components.grid.datagridex.DataGridColumnEx"
+                   namespace="ailk_compts"
+                   category="components"/>
+
+        <component id="com.ailk.common.ui.components.prettycombobox.PrettyComboBox"
+                   name="com.ailk.common.ui.components.prettycombobox.PrettyComboBox"
+                   namespace="ailk_compts"
+                   category="components"/>
+        <component id="com.ailk.common.ui.components.dummymap.MapLabel" name="com.ailk.common.ui.components.dummymap.MapLabel" namespace="ailk_compts" category="components"/>
+        <component id="com.ailk.common.ui.components.dummymap.MapNode" name="com.ailk.common.ui.components.dummymap.MapNode" namespace="ailk_compts" category="components"/>
+        <component id="com.ailk.common.ui.components.dummymap.MapWork" name="com.ailk.common.ui.components.dummymap.MapWork" namespace="ailk_compts" category="components"/>
+    </components>
+</design>

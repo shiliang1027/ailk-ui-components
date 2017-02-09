@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ailk-ui-components URI http://www.asiainfo-linkage.com.cn/flex/components -->
+<componentPackage>
+    <component id="AutoSizeTree"
+               class="com.ailk.common.ui.components.tree.autosizetree.AutoSizeTree"/>
+    <component id="TreeStepLoadRenderer"
+               class="com.ailk.common.ui.components.tree.autosizetree.renderer.TreeStepLoadRenderer"/>
+
+    <component id="AdvancedDataGrid"
+               class="com.ailk.common.ui.components.grid.advanceddatagrid.AdvancedDataGrid"/>
+
+    <component id="UXDateField"
+               class="com.ailk.common.ui.components.date.uxdate.UXDateField"/>
+
+    <component id="UXDateTimeChooser"
+               class="com.ailk.common.ui.components.date.uxdate.UXDateTimeChooser"/>
+
+    <component id="NormalWindowExt"
+               class="com.ailk.common.ui.components.window.normalwindow.NormalWindowExt"/>
+
+    <component id="Window"
+               class="com.ailk.common.ui.components.window.standardwindow.Window"/>
+
+    <component id="NavBar"
+               class="com.ailk.common.ui.components.navbar.NavBar"/>
+
+    <component id="Pagination"
+               class="com.ailk.common.ui.components.pagination.Pagination"/>
+
+    <component id="DynamicDropDown"
+               class="com.ailk.common.ui.components.dynamicdropdown.DynamicDropDown"/>
+
+    <component id="MultiEditDropDownList"
+               class="com.ailk.common.ui.components.dynamicdropdown.MultiEditDropDownList"/>
+
+    <component id="AdvancedExDataGrid"
+               class="com.ailk.common.ui.components.grid.advancedexdatagrid.AdvancedExDataGrid"/>
+
+    <component id="AdvancedExDataGridColumn"
+               class="com.ailk.common.ui.components.grid.advancedexdatagrid.AdvancedExDataGridColumn"/>
+
+    <component id="DataGridEx"
+               class="com.ailk.common.ui.components.grid.datagridex.DataGridEx"/>
+
+    <component id="SimpleMask"
+               class="com.ailk.common.ui.components.mask.SimpleMask"/>
+
+    <component id="DataGridColumnEx"
+               class="com.ailk.common.ui.components.grid.datagridex.DataGridColumnEx"/>
+
+    <component id="PrettyComboBox"
+               class="com.ailk.common.ui.components.prettycombobox.PrettyComboBox"/>
+               
+    <component id="VectorMapLabel" class="com.ailk.common.ui.components.dummymap.MapLabel"/>
+	<component id="VectorMapNode" class="com.ailk.common.ui.components.dummymap.MapNode"/>
+	<component id="VectorMapWork" class="com.ailk.common.ui.components.dummymap.MapWork"/>
+</componentPackage>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MXTreeItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+					  xmlns:s="library://ns.adobe.com/flex/spark"
+					  xmlns:mx="library://ns.adobe.com/flex/mx">
+
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="hovered"/>
+		<s:State name="selected"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import com.ailk.common.system.logging.ILogger;
+			import com.ailk.common.system.logging.Log;
+			import com.ailk.common.ui.components.tree.autosizetree.event.TreeStepLoadEvent;
+
+			import mx.controls.Tree;
+			private var log:ILogger = Log.getLoggerByClass(TreeStepLoadRenderer);
+
+			override protected function disclosureGroup_mouseDownHandler(event:MouseEvent):void
+			{
+				if (data.@_hasload == undefined)
+				{
+					event.stopPropagation();
+					dispatchLoadChildrenEvent();
+					data.@_hasload = true;
+				}
+				else
+				{
+					super.disclosureGroup_mouseDownHandler(event);
+				}
+
+			}
+
+			/**
+			 * 派发加载子孙节点事件
+			 */
+			private function dispatchLoadChildrenEvent():void
+			{
+				Tree(listData.owner).dispatchEvent(new TreeStepLoadEvent(TreeStepLoadEvent.LOAD_CHILDREN, data));
+			}
+		]]>
+	</fx:Script>
+	<s:HGroup left="0"
+			  right="0"
+			  top="0"
+			  bottom="0"
+			  verticalAlign="middle">
+		<s:Rect id="indentationSpacer"
+				width="{treeListData.indent}"
+				percentHeight="100"
+				alpha="0">
+			<s:fill>
+				<s:SolidColor color="0xFFFFFF"/>
+			</s:fill>
+		</s:Rect>
+		<s:Group id="disclosureGroup">
+			<s:BitmapImage source="{treeListData.disclosureIcon}"
+						   visible="{data.@_hasload==undefined || treeListData.hasChildren}"/>
+		</s:Group>
+		<s:BitmapImage source="{treeListData.icon}"/>
+		<s:Label id="labelField"
+				 text="{treeListData.label}"
+				 paddingTop="2"/>
+	</s:HGroup>
+</s:MXTreeItemRenderer>

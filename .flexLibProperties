@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="com.ailk.common.ui.components.Version"/>
+    <classEntry path="com.ailk.common.ui.components.grid.datagridex.DataGridEx"/>
+    <classEntry path="com.ailk.common.ui.components.grid.datagridex.DataGridColumnEx"/>
+    <classEntry path="com.ailk.common.ui.components.loadmanager.LoadManager"/>
+    <classEntry path="com.ailk.common.ui.components.mask.SimpleMask"/>
+  </includeClasses>
+  <includeResources>
+    <resourceEntry destPath="design.xml" sourcePath="design.xml"/>
+    <resourceEntry destPath="defaults.css" sourcePath="defaults.css"/>
+    <resourceEntry destPath="ailk-components-manifest.xml" sourcePath="ailk-components-manifest.xml"/>
+  </includeResources>
+  <namespaceManifests>
+    <namespaceManifestEntry manifest="ailk-components-manifest.xml" namespace="http://www.asiainfo-linkage.com.cn/flex/components"/>
+  </namespaceManifests>
+</flexLibProperties>
